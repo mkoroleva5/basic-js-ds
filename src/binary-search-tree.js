@@ -8,19 +8,15 @@ const { Node } = require('../extensions/list-tree.js');
 */
 class BinarySearchTree {
   constructor() {
-    this.root = null;
+    this.treeRoot = null;
   }
 
   root() {
-    if (this.root.data) {
-      return this.root;
-    } else {
-      return null;
-    }
+    return this.treeRoot;
   }
 
   add(data) {
-    this.root = addNode(this.root, data);
+    this.treeRoot = addNode(this.treeRoot, data);
 
     function addNode(node, data) {
       if (!node) {
@@ -43,7 +39,7 @@ class BinarySearchTree {
   }
 
   has(data) {
-    return hasData(this.root, data);
+    return hasData(this.treeRoot, data);
 
     function hasData(node, data) {
       if (!node) {
@@ -54,16 +50,18 @@ class BinarySearchTree {
         return true;
       }
 
-      if (data < node.data) {
+      if (node.data > data) {
         return hasData(node.left, data);
-      } else if (data > node.data) {
+      }
+
+      if (node.data < data) {
         return hasData(node.right, data);
       }
     }
   }
 
   find(data) {
-    return searchData(this.root, data);
+    return searchData(this.treeRoot, data);
 
     function searchData(node, data) {
       if (!node) {
@@ -83,7 +81,7 @@ class BinarySearchTree {
   }
 
   remove(data) {
-    this.root = this.removeData(this.root, data);
+    this.treeRoot = removeData(this.treeRoot, data);
 
     function removeData(node, data) {
       if (!node) {
@@ -93,7 +91,7 @@ class BinarySearchTree {
       if (data < node.data) {
         node.left = removeData(node.left, data);
         return node;
-      } else if (data > node.data) {
+      } else if (node.data < data) {
         node.right = removeData(node.right, data);
         return node;
       } else {
@@ -111,41 +109,41 @@ class BinarySearchTree {
           return node;
         }
 
-        let minRight = node.right;
-        while (minRight.left) {
-          minRight = minRight.data;
+        let maxLeft = node.left;
+        while (maxLeft.right) {
+          maxLeft = maxLeft.right;
         }
-        node.data = minRight.data;
-        node.right = removeData(node.right, minRight.data);
+        node.data = maxLeft.data;
+        node.left = removeData(node.left, maxLeft.data);
         return node;
       }
     }
   }
 
   min() {
-    if (!this.root) {
+    if (!this.treeRoot) {
       return undefined;
     }
 
-    let node = this.root;
+    let node = this.treeRoot;
     while (node.left) {
       node = node.left;
     }
 
-    return node.value;
+    return node.data;
   }
 
   max() {
-    if (!this.root) {
+    if (!this.treeRoot) {
       return undefined;
     }
 
-    let node = this.root;
+    let node = this.treeRoot;
     while (node.right) {
       node = node.right;
     }
 
-    return node.value;
+    return node.data;
   }
 }
 
